@@ -3,9 +3,6 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-#
-*.html
-
 # C extensions
 *.so
 
@@ -53,6 +50,8 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 cover/
+node_modules/
+package-lock.json
 
 # Translations
 *.mo

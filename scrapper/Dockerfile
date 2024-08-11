@@ -9,6 +9,6 @@ COPY . .
 RUN sed -i 's/\r//' scrapping.sh && \
 chmod +x scrapping.sh
 
-RUN pip install bs4 schedule pandas
+RUN pip install bs4 schedule requests
 
 CMD ["python", "scrapping_cleaning.py"]
