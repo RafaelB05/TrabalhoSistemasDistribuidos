@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script>
+        // Função chamada ao submeter o formulário
+        async function handleFormSubmit(event) {
+            event.preventDefault();  // Impede o comportamento padrão do formulário (recarregar a página)
+
+            const form = event.target;  // Pega o formulário submetido
+            const formData = new FormData(form);  // Captura os dados do formulário
+
+            // Cria um objeto com os dados do formulário
+            const data = {
+                variacao: formData.get("variacao"),
+                fundos: formData.getAll("fundos"),  // Captura todos os fundos selecionados
+                notificacao: formData.get("notificacao"),
+                dynamicInput: formData.get("dynamicInput")
+            };
+
+            try {
+                const response = await fetch("http://localhost:3000/api/v1/notify", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    alert("Notificação enviada com sucesso!");
+                } else {
+                    alert("Erro ao enviar notificação.");
+                }
+            } catch (error) {
+                console.error("Erro:", error);
+                alert("Erro ao enviar notificação.");
+            }
+        }
+
+        // Função para manipular o campo dinâmico baseado na seleção de notificação
+        function handleNotificationChange(event) {
+            const dynamicField = document.getElementById("dynamicField");
+            const dynamicLabel = document.getElementById("dynamicLabel");
+            const dynamicInput = document.getElementById("dynamicInput");
+
+            dynamicField.classList.remove("hidden");
+
+            if (event.target.value === "telegram") {
+                dynamicLabel.textContent = "Digite o ID do Telegram:";
+                dynamicInput.setAttribute("placeholder", "ID do Telegram");
+            } else if (event.target.value === "email") {
+                dynamicLabel.textContent = "Digite seu Email:";
+                dynamicInput.setAttribute("placeholder", "Email");
+            } else if (event.target.value === "sms") {
+                dynamicLabel.textContent = "Digite seu número de celular:";
+                dynamicInput.setAttribute("placeholder", "Número de celular");
+            }
+        }
+
+        function clearDynamicField() {
+            const dynamicField = document.getElementById("dynamicField");
+            dynamicField.classList.add("hidden");
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll('input[name="notificacao"]').forEach(radio => {
+                radio.addEventListener("change", handleNotificationChange);
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Variações de Fundos Imobiliários</h1>
+        <form onsubmit="handleFormSubmit(event)" autocomplete="off" id="ifundoForm">
+            <fieldset>
+                <legend>Variações</legend>
+                <input type="radio" name="variacao" value="A" id="ialta"><label for="ialta">Alta no Dividend Yeld</label>
+                <input type="radio" name="variacao" value="B" id="ibaixa"><label for="ibaixa">Baixa no Dividend Yeld</label>
+            </fieldset>
+            <fieldset>
+                <legend>Selecione os fundos que deseja receber notificações</legend>
+                <input type="checkbox" name="fundos" value="MXRF11" id="imxrf11"><label for="imxrf11">MXRF11</label>
+                <input type="checkbox" name="fundos" value="DEVA11" id="ideva11"><label for="ideva11">DEVA11</label>
+                <input type="checkbox" name="fundos" value="HGLG11" id="ihglg11"><label for="ihglg11">HGLG11</label>
+                <input type="checkbox" name="fundos" value="BTCI11" id="ibtci11"><label for="ibtci11">BTCI11</label>
+                <input type="checkbox" name="fundos" value="HTMX11" id="htmx11"><label for="htmx11">HTMX11</label>
+                <input type="checkbox" name="fundos" value="VGIR11" id="ivgir11"><label for="ivgir11">VGIR11</label>
+                <input type="checkbox" name="fundos" value="VGIA11" id="ivgia11"><label for="ivgia11">VGIA11</label>
+            </fieldset>
+            <fieldset>
+                <legend>Escolha o método de notificação</legend>
+                <input type="radio" name="notificacao" value="telegram" id="itelegram"><label for="itelegram">Telegram</label>
+                <input type="radio" name="notificacao" value="email" id="iemail"><label for="iemail">Email</label>
+                <input type="radio" name="notificacao" value="sms" id="isms"><label for="isms">SMS</label>
+            </fieldset>
+            <div id="dynamicField" class="hidden">
+                <label id="dynamicLabel" for="dynamicInput"></label>
+                <input type="text" id="dynamicInput" name="dynamicInput" required>
+            </div>
+            <p>
+                <input type="submit" value="Enviar">
+                <input type="reset" value="Limpar" onclick="clearDynamicField()">
+            </p>
+        </form>
+    </div>
+    <script src="js/script.js"></script>
+</body>
+</html>

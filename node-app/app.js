@@ -1,39 +1,33 @@
-const express = require('express')
-const path = require('path')
-const cors = require('cors')
-const app = express()
-const porta = 3000
+const express = require('express');
+const path = require('path');
+const cors = require('cors');
+const emailRoutes = require('./routes/emailRoutes');
+const graphRoutes = require('./routes/graphRoutes');
+const notifyRoutes = require('./routes/notifyRoutes');
+const healthRoutes = require('./routes/healthRoutes');
 
-app.use(express.json())
-app.use(cors({
-    origin: '*'
-}))
+const app = express();
+const porta = 3000;
 
-app.use(express.static(path.join(__dirname, 'inde.html')));
+app.use(express.json());
+app.use(cors({ origin: '*' }));
 
-let titulos_stored
+app.use(express.static(path.join(__dirname, 'grafico')));
+app.use(express.static(path.join(__dirname, 'notificar-usuario')));
+
+app.use(emailRoutes);
+app.use(graphRoutes);
+app.use(notifyRoutes);
+app.use(healthRoutes);
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname,'index.html'));
+    res.sendFile(path.join(__dirname, 'grafico', 'index.html'));
 });
 
-
-
-app.post('/api/v1/dados', (req,res) => {
-    const titulos = req.body
-    titulos_stored = titulos
-    res.status(200).json({ message: 'Lista de objetos recebida com sucesso!' });
-})
-
-app.get('/api/v1/graficos',(req,res) => {
-    res.status(200).send(titulos_stored)
-})
-
-app.get('/api/v1/healt', (req, res) => {
-    res.status(200).send('UP')
-})
-
+app.get('/notificar', (req, res) => {
+    res.sendFile(path.join(__dirname, 'notificar-usuario', 'index.html'));
+});
 
 app.listen(porta, () => {
-    console.log(`App escutando na porta ${porta}`)
-})
+    console.log(`App escutando na porta ${porta}`);
+});
