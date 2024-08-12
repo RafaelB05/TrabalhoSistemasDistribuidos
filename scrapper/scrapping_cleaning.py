@@ -10,7 +10,7 @@ def executar_rotinas():
 
 def main():
     executar_rotinas()
-    schedule.every().monday.at("10:00").do(executar_rotinas)
+    schedule.every(1).minute.do(executar_rotinas)
     while True:
         schedule.run_pending()
 

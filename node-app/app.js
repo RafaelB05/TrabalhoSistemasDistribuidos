@@ -1,7 +1,6 @@
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
-const emailRoutes = require('./routes/emailRoutes');
 const graphRoutes = require('./routes/graphRoutes');
 const notifyRoutes = require('./routes/notifyRoutes');
 const healthRoutes = require('./routes/healthRoutes');
@@ -14,8 +13,6 @@ app.use(cors({ origin: '*' }));
 
 app.use(express.static(path.join(__dirname, 'grafico')));
 app.use(express.static(path.join(__dirname, 'notificar-usuario')));
-
-app.use(emailRoutes);
 app.use(graphRoutes);
 app.use(notifyRoutes);
 app.use(healthRoutes);

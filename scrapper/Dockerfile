@@ -9,6 +9,6 @@ COPY . .
 RUN sed -i 's/\r//' scrapping.sh && \
 chmod +x scrapping.sh
 
-RUN pip install bs4 schedule requests
+RUN pip install --no-cache-dir -r requirements.txt
 
 CMD ["python", "scrapping_cleaning.py"]
